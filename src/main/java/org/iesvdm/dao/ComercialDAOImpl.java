@@ -87,6 +87,7 @@ public class ComercialDAOImpl implements ComercialDAO {
 
     @Override
     public void delete(int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
-    }}
+        int rows = jdbcTemplate.update("DELETE FROM comercial WHERE id = ?", id);
+        log.info("Delete de Comercial con {} registros eliminados.", rows);
+    }
+}

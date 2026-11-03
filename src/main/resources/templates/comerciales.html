@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Comerciales</title>
+</head>
+<body>
+    <h1>Comerciales</h1>
+    <p><a th:href="@{/comerciales/crear}">Crear comercial</a></p>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Apellido 1</th>
+                <th>Apellido 2</th>
+                <th>Comisión</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="comercial : ${listaComerciales}">
+                <td th:text="${comercial.id}">0</td>
+                <td th:text="${comercial.nombre}">Nombre</td>
+                <td th:text="${comercial.apellido1}">Apellido 1</td>
+                <td th:text="${comercial.apellido2}">Apellido 2</td>
+                <td th:text="${comercial.comisión}">0.0</td>
+                <td>
+                    <a th:href="@{/comerciales/editor/{id}(id=${comercial.id})}">Editar</a>
+                    <form th:action="@{/comerciales/borrar/{id}(id=${comercial.id})}" method="post" style="display: inline;">
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

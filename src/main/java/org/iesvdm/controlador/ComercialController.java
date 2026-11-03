@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.iesvdm.modelo.Comercial;
 import org.iesvdm.service.ComercialService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ComercialController {
@@ -57,8 +59,13 @@ public class ComercialController {
     }
 
     @PostMapping("/comerciales/borrar/{id}")
-    public String borrar(@PathVariable int id) {
-        comercialService.deleteComercial(id);
+    public String borrar(@PathVariable int id, RedirectAttributes redirectAttributes) {
+        try {
+            comercialService.deleteComercial(id);
+            redirectAttributes.addFlashAttribute("mensaje", "Comercial eliminado correctamente.");
+        } catch (DataIntegrityViolationException exception) {
+            redirectAttributes.addFlashAttribute("error", "No se puede eliminar el comercial porque tiene pedidos asociados.");
+        }
         return "redirect:/comerciales";
     }
 }

@@ -13,6 +13,8 @@
 </head>
 <body>
     <div id="contenedora" style="float:none; margin: 0 auto; width: 95%;" >
+                <p th:if="${mensaje}" th:text="${mensaje}"></p>
+                <p th:if="${error}" th:text="${error}" style="color: #b00020;"></p>
                 <div class="clearfix">
                         <div style="float: left; width: 50%">
                             <h1>Clientes</h1>

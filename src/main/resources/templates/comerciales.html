@@ -6,6 +6,8 @@
 </head>
 <body>
     <h1>Comerciales</h1>
+    <p th:if="${mensaje}" th:text="${mensaje}"></p>
+    <p th:if="${error}" th:text="${error}" style="color: #b00020;"></p>
     <p><a th:href="@{/comerciales/crear}">Crear comercial</a></p>
     <table>
         <thead>

@@ -3,12 +3,14 @@ package org.iesvdm.controlador;
 import java.util.List;
 import org.iesvdm.modelo.Cliente;
 import org.iesvdm.service.ClienteService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ClienteController {
@@ -24,6 +26,14 @@ public class ClienteController {
         List<Cliente> listaClientes = clienteService.listAll();
         model.addAttribute("listaClientes", listaClientes);
         return "clientes";
+    }
+
+    @GetMapping("/clientes/{id}")
+    public String detalle(@PathVariable int id, Model model) {
+        Cliente cliente = clienteService.findCliente(id)
+                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado: " + id));
+        model.addAttribute("cliente", cliente);
+        return "detalleCliente";
     }
 
     @GetMapping("/clientes/crear")
@@ -56,8 +66,13 @@ public class ClienteController {
     }
 
     @PostMapping("/clientes/borrar/{id}")
-    public String borrar(@PathVariable int id) {
-        clienteService.deleteCliente(id);
+    public String borrar(@PathVariable int id, RedirectAttributes redirectAttributes) {
+        try {
+            clienteService.deleteCliente(id);
+            redirectAttributes.addFlashAttribute("mensaje", "Cliente eliminado correctamente.");
+        } catch (DataIntegrityViolationException exception) {
+            redirectAttributes.addFlashAttribute("error", "No se puede eliminar el cliente porque tiene pedidos asociados.");
+        }
         return "redirect:/clientes";
     }
 }
